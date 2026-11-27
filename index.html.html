@@ -1,0 +1,522 @@
+
+index_Version4.html
+100%
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>중1 공부방 — 2학기</title>
+  <style>
+    :root {
+      --bg: #f5f7fc;
+      --card: #ffffff;
+      --ink: #26344d;
+      --muted: #7b8799;
+      --purple: #7054df;
+      --line: #e8ecf3;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--bg);
+      font-family: "Noto Sans KR", system-ui, sans-serif;
+    }
+
+    button, input { font: inherit; }
+
+    .app {
+      max-width: 1200px;
+      min-height: 100vh;
+      margin: auto;
+      display: grid;
+      grid-template-columns: 220px 1fr;
+    }
+
+    aside {
+      padding: 28px 16px;
+      border-right: 1px solid var(--line);
+      background: white;
+    }
+
+    .logo {
+      margin-bottom: 25px;
+      padding-left: 10px;
+      font-size: 21px;
+      font-weight: 900;
+    }
+
+    .logo span { color: var(--purple); }
+
+    .subject-btn {
+      width: 100%;
+      margin: 3px 0;
+      padding: 11px 12px;
+      border: 0;
+      border-radius: 10px;
+      color: #6a778c;
+      background: transparent;
+      text-align: left;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .subject-btn.active {
+      color: var(--purple);
+      background: #efecff;
+    }
+
+    main { min-width: 0; padding: 28px clamp(16px, 4vw, 42px); }
+
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 22px;
+    }
+
+    .top p { margin: 0; color: var(--muted); font-size: 13px; }
+
+    .term {
+      padding: 7px 11px;
+      border-radius: 99px;
+      color: #684ccf;
+      background: #ede8ff;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .hero {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      padding: 30px;
+      border-radius: 20px;
+      color: white;
+      background: linear-gradient(120deg, #7252df, #977bef);
+      box-shadow: 0 16px 35px #7054df25;
+    }
+
+    .hero h1 { margin: 0 0 8px; font-size: clamp(25px, 4vw, 38px); }
+    .hero p { margin: 0; color: #eeeaff; }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin: 18px 0 28px;
+    }
+
+    .stat {
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: white;
+    }
+
+    .stat span { display: block; color: var(--muted); font-size: 12px; }
+    .stat strong { display: block; margin-top: 6px; font-size: 22px; }
+
+    .heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 13px;
+    }
+
+    .heading h2 { margin: 0; }
+
+    .heading input {
+      width: min(240px, 45%);
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      outline: none;
+    }
+
+    .lesson-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 13px;
+    }
+
+    .lesson {
+      min-height: 210px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 15px;
+      background: white;
+      box-shadow: 0 10px 24px #2839540a;
+    }
+
+    .lesson small {
+      display: inline-block;
+      padding: 5px 8px;
+      border-radius: 7px;
+      font-weight: 800;
+    }
+
+    .lesson h3 { margin: 18px 0 7px; }
+    .lesson p { min-height: 58px; color: var(--muted); font-size: 13px; line-height: 1.6; }
+
+    .lesson button {
+      width: 100%;
+      padding: 10px;
+      border: 0;
+      border-radius: 9px;
+      color: #674cbf;
+      background: #f0edff;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+      display: none;
+      place-items: center;
+      padding: 16px;
+      background: #172238ad;
+      backdrop-filter: blur(5px);
+    }
+
+    .modal.open { display: grid; }
+
+    .dialog {
+      width: min(520px, 100%);
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 26px;
+      border-radius: 18px;
+      background: white;
+    }
+
+    .dialog-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+    }
+
+    .dialog h2 { margin: 0 0 5px; }
+    .dialog-sub { color: var(--muted); font-size: 12px; }
+
+    .close {
+      width: 34px;
+      height: 34px;
+      border: 0;
+      border-radius: 8px;
+      background: #f1f3f7;
+      cursor: pointer;
+    }
+
+    .question { margin: 23px 0 14px; font-weight: 800; line-height: 1.6; }
+    .choices { display: grid; gap: 8px; }
+
+    .choice {
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      color: var(--ink);
+      background: white;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .choice.correct { border-color: #57bc96; color: #1d7657; background: #ecfaf4; }
+    .choice.wrong { border-color: #ea9393; color: #ad4343; background: #fff2f2; }
+
+    .explanation { min-height: 20px; margin-top: 12px; color: var(--muted); font-size: 13px; }
+    .next { display: none; width: 100%; margin-top: 10px; padding: 11px; border: 0; border-radius: 9px; color: white; background: var(--purple); font-weight: 800; }
+
+    @media (max-width: 900px) {
+      .lesson-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 700px) {
+      .app { display: block; }
+      aside { border-right: 0; border-bottom: 1px solid var(--line); padding: 12px; }
+      .logo { padding: 0; margin: 0 0 9px; }
+      nav { display: flex; overflow-x: auto; }
+      .subject-btn { width: auto; flex: 0 0 auto; }
+      main { padding: 18px 14px 35px; }
+      .hero { padding: 22px; }
+      .stats { gap: 7px; }
+      .stat { padding: 12px 9px; }
+      .lesson-grid { grid-template-columns: 1fr; }
+      .heading { align-items: start; flex-direction: column; }
+      .heading input { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside>
+      <div class="logo">📚 공부<span>콩</span></div>
+      <nav id="nav">
+        <button class="subject-btn active" data-subject="전체">🏠 전체 보기</button>
+        <button class="subject-btn" data-subject="국어">✍️ 국어 비상</button>
+        <button class="subject-btn" data-subject="영어">🔤 영어 동아</button>
+        <button class="subject-btn" data-subject="수학">📐 수학 비상</button>
+        <button class="subject-btn" data-subject="과학">🔬 과학 비상</button>
+        <button class="subject-btn" data-subject="사회">🌏 사회 비상</button>
+      </nav>
+    </aside>
+
+    <main>
+      <div class="top">
+        <p>중학교 1학년 · 나의 공부방</p>
+        <div class="term">2학기 전용</div>
+      </div>
+
+      <section class="hero">
+        <div>
+          <h1>중1 2학기, 힘차게 시작하기 🌱</h1>
+          <p>비상 국어·수학·과학·사회와 동아 영어를 차근차근 익혀요.</p>
+        </div>
+      </section>
+
+      <section class="stats">
+        <div class="stat"><span>오늘 푼 퀴즈</span><strong id="quizCount">0</strong></div>
+        <div class="stat"><span>맞힌 문제</span><strong id="correctCount">0</strong></div>
+        <div class="stat"><span>학습 과목</span><strong id="subjectCount">0</strong></div>
+      </section>
+
+      <div class="heading">
+        <h2 id="heading">전체 학습</h2>
+        <input id="search" placeholder="단원이나 키워드 검색" />
+      </div>
+
+      <section class="lesson-grid" id="lessonGrid"></section>
+    </main>
+  </div>
+
+  <div class="modal" id="modal">
+    <div class="dialog">
+      <div class="dialog-head">
+        <div>
+          <h2 id="dialogTitle"></h2>
+          <div class="dialog-sub" id="dialogSub"></div>
+        </div>
+        <button class="close" id="closeModal">×</button>
+      </div>
+      <div class="question" id="question"></div>
+      <div class="choices" id="choices"></div>
+      <div class="explanation" id="explanation"></div>
+      <button class="next" id="nextBtn">다음으로</button>
+    </div>
+  </div>
+
+  <script>
+    const lessons = [
+      {
+        subject:"국어", title:"토의와 토론",
+        desc:"의견을 듣고 근거를 들어 자신의 생각을 말해요.",
+        question:"토론에서 상대의 주장에 반대할 때 먼저 해야 할 것은?",
+        choices:["감정 표현하기","상대 주장 이해하기","큰 소리로 말하기","의견 근거 숨기기"],
+        answer:1, explain:"토론은 상대방의 의견을 먼저 이해하고 근거를 들어 대답하는 것에서 시작해요."
+      },
+      {
+        subject:"국어", title:"설명하는 글",
+        desc:"대상을 분류하고 알기 쉽게 설명하는 방법을 연습해요.",
+        question:"설명하는 글의 중심 방법으로 알맞은 것은?",
+        choices:["감정 표현","분류와 예시","허구 만들기","반복 말하기"],
+        answer:1, explain:"설명하는 글은 분류, 비교, 예시 등으로 내용을 쉽게 전달해요."
+      },
+      {
+        subject:"영어", title:"미래의 계획",
+        desc:"will과 be going to를 활용해 미래 계획을 표현해요.",
+        question:"다음 중 미래 계획을 나타낸 문장은?",
+        choices:["I am student.","I went to school.","I will study tomorrow.","I saw a movie."],
+        answer:2, explain:"will은 미래에 할 일이나 앞으로의 일을 나타낼 때 사용해요."
+      },
+      {
+        subject:"영어", title:"경험 말하기",
+        desc:"현재완료를 활용해 살아온 경험을 이야기해요.",
+        question:"현재완료의 기본 구조는?",
+        choices:["have/has + 동사 과거분사","be + 동사 원형","do + 동사 과거형","will + 현재분사"],
+        answer:0, explain:"현재완료는 have 또는 has 뒤에 동사의 과거분사를 사용해요."
+      },
+      {
+        subject:"수학", title:"기본 도형",
+        desc:"점, 선분, 반직선, 평면 위의 위치 관계를 공부해요.",
+        question:"한 점에서 시작하여 한쪽으로 끝없이 뻗은 도형은?",
+        choices:["선분","직선","반직선","평면"],
+        answer:2, explain:"반직선은 시작점은 있고 한쪽으로 끝없이 뻗어 나가는 도형이에요."
+      },
+      {
+        subject:"수학", title:"입체 도형",
+        desc:"다면체와 회전체의 특징을 비교해요.",
+        question:"직각삼각형을 한 변을 축으로 돌려 만든 입체도형은?",
+        choices:["원기둥","원뿔","구","사각뿔"],
+        answer:1, explain:"직각삼각형을 돌려 원뿔 모양의 회전체를 만들 수 있어요."
+      },
+      {
+        subject:"수학", title:"통계",
+        desc:"히스토그램과 도수분포표를 읽고 분석해요.",
+        question:"계급의 양 끝값의 평균을 무엇이라고 할까요?",
+        choices:["도수","계급값","상대도수","변량"],
+        answer:1, explain:"계급의 양 끝값을 더해 2로 나눈 값이 계급값이에요."
+      },
+      {
+        subject:"과학", title:"빛과 파동",
+        desc:"빛의 반사와 굴절, 파동의 특징을 알아봐요.",
+        question:"빛이 매질의 경계에서 다른 방향으로 꺾이는 현상은?",
+        choices:["반사","굴절","흡수","확산"],
+        answer:1, explain:"빛이 두 매질의 경계에서 진행 방향을 바꾸는 현상을 굴절이라고 해요."
+      },
+      {
+        subject:"과학", title:"힘과 운동",
+        desc:"중력과 마찰력의 원리를 이해해요.",
+        question:"물체의 운동을 방해하는 힘은?",
+        choices:["중력","마찰력","자기력","인력"],
+        answer:1, explain:"마찰력은 접촉면에서 물체의 운동을 방해하는 힘이에요."
+      },
+      {
+        subject:"과학", title:"기권과 날씨",
+        desc:"대기의 구조와 기압 차이를 공부해요.",
+        question:"바람은 대체로 어느 곳에서 어느 곳으로 부나요?",
+        choices:["고기압에서 저기압으로","저기압에서 고기압으로","차가운 곳에서만","전국에서 균일하게"],
+        answer:0, explain:"바람은 기압 차이에 의해 높은 기압에서 낮은 기압으로 부어요."
+      },
+      {
+        subject:"사회", title:"인권과 헌법",
+        desc:"기본권의 의미와 헌법의 역할을 배워요.",
+        question:"국민의 기본권을 두텁게 보호하기 위한 최고법은?",
+        choices:["시민 헌장","헌법","조례","규칙"],
+        answer:1, explain:"헌법은 국가의 최고 규범이며 국민의 기본권을 보장해요."
+      },
+      {
+        subject:"사회", title:"시장 경제",
+        desc:"수요와 공급을 통해 시장의 원리를 이해해요.",
+        question:"공급은 일반적으로 가격이 상승하면 어떻게 될까요?",
+        choices:["감소한다","변하지 않는다","증가한다","자동으로 소멸한다"],
+        answer:2, explain:"다른 조건이 같을 때 가격이 높아지면 생산자는 더 많이 공급하려고 해요."
+      }
+    ];
+
+    const colors = {
+      "국어": ["#fff0e7","#c66b35"],
+      "영어": ["#e8f4ff","#3979bc"],
+      "수학": ["#f0ebff","#7153c8"],
+      "과학": ["#e8f8ef","#26916a"],
+      "사회": ["#fff7df","#aa8120"]
+    };
+
+    let active = "전체";
+    let current = null;
+    let answered = false;
+    let progress = JSON.parse(localStorage.getItem("studyProgress2") || '{"quiz":0,"correct":0,"subjects":[]}');
+
+    function renderProgress() {
+      document.getElementById("quizCount").textContent = progress.quiz;
+      document.getElementById("correctCount").textContent = progress.correct;
+      document.getElementById("subjectCount").textContent = progress.subjects.length;
+    }
+
+    function render() {
+      const search = document.getElementById("search").value.trim();
+      const grid = document.getElementById("lessonGrid");
+      grid.replaceChildren();
+
+      lessons
+        .filter(item =>
+          (active === "전체" || item.subject === active) &&
+          (!search || (item.title + item.desc + item.subject).includes(search))
+        )
+        .forEach(item => {
+          const card = document.createElement("article");
+          card.className = "lesson";
+          card.innerHTML = `
+            <small style="background:${colors[item.subject][0]};color:${colors[item.subject][1]}">${item.subject}</small>
+            <h3>${item.title}</h3>
+            <p>${item.desc}</p>
+            <button>퀴즈 풀기 →</button>
+          `;
+          card.querySelector("button").onclick = () => openQuiz(item);
+          grid.appendChild(card);
+        });
+
+      document.getElementById("heading").textContent =
+        active === "전체" ? "전체 학습" : active + " 학습";
+    }
+
+    function openQuiz(item) {
+      current = item;
+      answered = false;
+      document.getElementById("dialogTitle").textContent = item.title;
+      document.getElementById("dialogSub").textContent =
+        item.subject + " · 중학교 1학년 2학기";
+      document.getElementById("question").textContent = item.question;
+      document.getElementById("explanation").textContent = "";
+      document.getElementById("nextBtn").style.display = "none";
+
+      const choices = document.getElementById("choices");
+      choices.replaceChildren();
+
+      item.choices.forEach((text, index) => {
+        const button = document.createElement("button");
+        button.className = "choice";
+        button.textContent = (index + 1) + ". " + text;
+        button.onclick = () => answer(index, button);
+        choices.appendChild(button);
+      });
+
+      document.getElementById("modal").classList.add("open");
+    }
+
+    function answer(index, selected) {
+      if (answered) return;
+      answered = true;
+
+      document.querySelectorAll(".choice").forEach((button, i) => {
+        button.disabled = true;
+        if (i === current.answer) button.classList.add("correct");
+      });
+
+      if (index !== current.answer) selected.classList.add("wrong");
+
+      progress.quiz++;
+      if (index === current.answer) progress.correct++;
+      if (!progress.subjects.includes(current.subject))
+        progress.subjects.push(current.subject);
+
+      localStorage.setItem("studyProgress2", JSON.stringify(progress));
+      renderProgress();
+
+      document.getElementById("explanation").textContent =
+        (index === current.answer ? "정답이에요! 🎉 " : "다시 확인해요 🙂 ") +
+        current.explain;
+      document.getElementById("nextBtn").style.display = "block";
+    }
+
+    document.getElementById("nav").onclick = event => {
+      const button = event.target.closest(".subject-btn");
+      if (!button) return;
+      active = button.dataset.subject;
+      document.querySelectorAll(".subject-btn").forEach(item =>
+        item.classList.toggle("active", item === button)
+      );
+      render();
+    };
+
+    document.getElementById("search").oninput = render;
+    document.getElementById("closeModal").onclick = () =>
+      document.getElementById("modal").classList.remove("open");
+    document.getElementById("nextBtn").onclick = () =>
+      document.getElementById("modal").classList.remove("open");
+    document.getElementById("modal").onclick = event => {
+      if (event.target.id === "modal")
+        document.getElementById("modal").classList.remove("open");
+    };
+
+    render();
+    renderProgress();
+  </script>
+</body>
+</html>
